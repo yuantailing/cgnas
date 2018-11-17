@@ -100,6 +100,7 @@ if __name__ == '__main__':
         shadow = [line for line in shadow if shadow_name(line) in protected_users]
         smbpasswd = []
         user_gid = group_gid([g for g in group if group_name(g) == 'user'][0])
+        shadow_gid = group_gid([g for g in group if group_name(g) == 'shadow'][0])
 
         # check valid usersnames
         # note that staff_number and username MUST NOT duplicate
@@ -167,11 +168,12 @@ if __name__ == '__main__':
         # write passwd
         with open(os.open('/etc/passwd.tmp', os.O_CREAT | os.O_WRONLY, 0o644), 'w') as f:
             f.write(''.join(passwd))
-        with open(os.open('/etc/shadow.tmp', os.O_CREAT | os.O_WRONLY, 0o600), 'w') as f:
+        with open(os.open('/etc/shadow.tmp', os.O_CREAT | os.O_WRONLY, 0o640), 'w') as f:
             f.write(''.join(shadow))
         with open(os.open('/etc/samba/smbpasswd.tmp', os.O_CREAT | os.O_WRONLY, 0o600), 'w') as f:
             f.write(''.join(smbpasswd))
         os.rename('/etc/passwd.tmp', '/etc/passwd')
+        os.chown('/etc/shadow.tmp', 0, shadow_gid)
         os.rename('/etc/shadow.tmp', '/etc/shadow')
         os.rename('/etc/samba/smbpasswd.tmp', '/etc/samba/smbpasswd')
 
