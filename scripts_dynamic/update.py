@@ -99,6 +99,7 @@ if __name__ == '__main__':
             forbidden_names.add(group_name(line))
         shadow = [line for line in shadow if shadow_name(line) in protected_users]
         smbpasswd = []
+        user_gid = group_gid([g for g in group if group_name(g) == 'user'][0])
 
         # check valid usersnames
         # note that staff_number and username MUST NOT duplicate
@@ -122,13 +123,13 @@ if __name__ == '__main__':
 
         # set home and prepare passwd (and group, shadow, smbpasswd)
         for user in users:
-            uid = gid = 10000 + user['staff_number']
+            uid = 10000 + user['staff_number']
+            gid = user_gid
             mnt_path = os.path.join('/nas/{:d}'.format(uid))
             home_path = os.path.join('/home/{:s}'.format(user['username']))
 
             # prepare passwd
             passwd.append('{:s}:x:{:d}:{:d}::{:s}:/bin/bash\n'.format(user['username'], uid, gid, mnt_path))
-            group.append('{:s}:x:{:d}:\n'.format(user['username'], gid))
             shadow.append('{:s}:{:s}:{:d}:0:90:7:::\n'.format(user['username'], user['shadow_password'], int(user['password_updated_at'] / 86400)))
             smbpasswd.append('{:s}:{:d}:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:{:s}:[U          ]:LCT-{:s}:'.format(
                 user['username'], uid, user['nt_password_hash'], hex(int(user['password_updated_at']))[2:].upper()))
@@ -166,14 +167,11 @@ if __name__ == '__main__':
         # write passwd
         with open(os.open('/etc/passwd.tmp', os.O_CREAT | os.O_WRONLY, 0o644), 'w') as f:
             f.write(''.join(passwd))
-        with open(os.open('/etc/group.tmp', os.O_CREAT | os.O_WRONLY, 0o644), 'w') as f:
-            f.write(''.join(group))
         with open(os.open('/etc/shadow.tmp', os.O_CREAT | os.O_WRONLY, 0o600), 'w') as f:
             f.write(''.join(shadow))
         with open(os.open('/etc/samba/smbpasswd.tmp', os.O_CREAT | os.O_WRONLY, 0o600), 'w') as f:
             f.write(''.join(smbpasswd))
         os.rename('/etc/passwd.tmp', '/etc/passwd')
-        os.rename('/etc/group.tmp', '/etc/group')
         os.rename('/etc/shadow.tmp', '/etc/shadow')
         os.rename('/etc/samba/smbpasswd.tmp', '/etc/samba/smbpasswd')
 

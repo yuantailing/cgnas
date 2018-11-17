@@ -2,6 +2,9 @@
 
 set -ex
 
+# add `user' group
+groupadd -g501 user
+
 # setup openssh-server
 sed "s@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g" -i /etc/pam.d/sshd
 sed "/^HostKey/d" -i /etc/ssh/sshd_config
