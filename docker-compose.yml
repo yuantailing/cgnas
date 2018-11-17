@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  cgnas:
+    build:
+      context: .
+      args:
+        VSFTPD_PASV_MIN_PORT: ${VSFTPD_PASV_MIN_PORT}
+        VSFTPD_PASV_MAX_PORT: ${VSFTPD_PASV_MAX_PORT}
+    restart: always
+    hostname: nas-docker
+    volumes:
+      - ./scripts_dynamic:/root/scripts_dynamic:ro
+      - /mnt/nas/home:/nas
+    ports:
+      - "21:21"
+      - "22:22"
+      - "80:80"
+      - "111:111"
+      - "111:111/udp"
+      - "139:139"
+      - "445:445"
+      - "2049:2049"
+      - "2049:2049/udp"
+      - "31001-31002:31001-31002"
+      - "31001-31002:31001-31002/udp"
+      - "${VSFTPD_PASV_MIN_PORT}-${VSFTPD_PASV_MAX_PORT}:${VSFTPD_PASV_MIN_PORT}-${VSFTPD_PASV_MAX_PORT}"
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    devices:
+      - /dev/net/tun

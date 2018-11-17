@@ -1,0 +1,7 @@
+*.pyc
+
+/.env
+/conf/openvpn_account
+/scripts_dynamic/settings.py
+/ssh_host_keys/*
+!/ssh_host_keys/.gitkeep
