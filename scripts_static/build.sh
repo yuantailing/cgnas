@@ -6,7 +6,11 @@ set -ex
 groupadd -g501 user
 
 # set timezone
-cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
+# setup locale
+locale-gen en_US en_US.utf8 zh_CN zh_CN.utf8
+update-locale LANG=en_US.utf8
 
 # setup openssh-server
 sed "s@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g" -i /etc/pam.d/sshd
@@ -32,12 +36,13 @@ echo "[share]
 # setup vsftpd
 sed "s/listen_ipv6=YES/listen_ipv6=NO/g" -i /etc/vsftpd.conf
 sed "s/listen=NO/listen=YES/g" -i /etc/vsftpd.conf
-echo "write_enable=YES" >>/etc/vsftpd.conf
-echo "pasv_min_port=${VSFTPD_PASV_MIN_PORT}" >>/etc/vsftpd.conf
-echo "pasv_max_port=${VSFTPD_PASV_MAX_PORT}" >>/etc/vsftpd.conf
-echo "chroot_local_user=YES" >>/etc/vsftpd.conf
-echo "local_root=/" >>/etc/vsftpd.conf
-echo "local_umask=022" >>/etc/vsftpd.conf
+echo "write_enable=YES
+chroot_local_user=YES
+local_root=/
+local_umask=022
+utf8_filesystem=YES
+pasv_min_port=${VSFTPD_PASV_MIN_PORT}
+pasv_max_port=${VSFTPD_PASV_MAX_PORT}" >>/etc/vsftpd.conf
 
 # setup nfs
 mkdir -p /run/sendsigs.omit.d

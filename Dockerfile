@@ -17,7 +17,7 @@ RUN pip3 install requests && \
 	rm -rf ~/.cache/pip
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y automake build-essential cron expect git gnupg2 htop iputils-ping less libboost-dev locate lsb-release man nano net-tools p7zip-full psmisc python python-pip rar screen smbclient sshfs telnet tmux unrar unzip vim wget zip zsh && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake build-essential cron expect git gnupg2 htop iputils-ping less libboost-dev locate lsb-release man nano net-tools p7zip-full psmisc python python-pip rar screen smbclient sshfs telnet tmux unrar unzip vim wget zip zsh && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY ssh_host_keys /etc/cgnas/ssh_host_keys
