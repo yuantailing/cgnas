@@ -22,6 +22,9 @@ def passwd_name(line):
 def passwd_uid(line):
     return int(line.split(':')[2])
 
+def passwd_sh(line):
+    return line.rstrip('\n').split(':')[6]
+
 def group_name(line):
     return line.split(':')[0]
 
@@ -50,6 +53,7 @@ if __name__ == '__main__':
         handlers=handlers,
     )
 
+    passed_lock_created = False
     try:
         # communicate with API
         latest_password_update_filename = os.path.join(var_dir, 'latest_password_update')
@@ -82,6 +86,11 @@ if __name__ == '__main__':
             f.write('{:f}'.format(latest_password_update))
 
         # get system users
+        with open('/etc/passwd.lock', 'x') as f:
+            f.write('{:d}'.format(os.getpid()))
+        with open('/etc/shadow.lock', 'x') as f:
+            f.write('{:d}'.format(os.getpid()))
+        passed_lock_created = True
         protected_users = set()
         forbidden_names = set()
         with open('/etc/passwd') as f:
@@ -130,10 +139,10 @@ if __name__ == '__main__':
             home_path = os.path.join('/home/{:s}'.format(user['username']))
 
             # prepare passwd
-            passwd.append('{:s}:x:{:d}:{:d}::{:s}:/bin/bash\n'.format(user['username'], uid, gid, mnt_path))
+            passwd.append('{:s}:x:{:d}:{:d}::{:s}:{:s}\n'.format(user['username'], uid, gid, mnt_path, '/bin/bash'))
             shadow.append('{:s}:{:s}:{:d}:0:90:7:::\n'.format(user['username'], user['shadow_password'], int(user['password_updated_at'] / 86400)))
-            smbpasswd.append('{:s}:{:d}:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:{:s}:[U          ]:LCT-{:s}:'.format(
-                user['username'], uid, user['nt_password_hash'], hex(int(user['password_updated_at']))[2:].upper()))
+            smbpasswd.append('{:s}:{:d}:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:{:s}:[U          ]:LCT-{:s}:\n'.format(
+                user['username'], uid, user['nt_password_hash'], hex(int(user['password_updated_at'])).lstrip('0x').upper()))
 
             # set home
             if not os.path.isdir(mnt_path):
@@ -158,12 +167,16 @@ if __name__ == '__main__':
         # disable /usr/bin/passwd and /usr/bin/smbpasswd
         path = '/usr/bin/passwd'
         stat = os.stat(path)
-        if stat.st_mode & 0o7777 != 0o4750:
-            os.chmod(path, 0o4750)
+        if stat.st_mode & 0o7777 != 0o4644:
+            os.chmod(path, 0o4644)
+        path = '/usr/bin/chsh'
+        stat = os.stat(path)
+        if stat.st_mode & 0o7777 != 0o4644:
+            os.chmod(path, 0o4644)
         path = '/usr/bin/smbpasswd'
         stat = os.stat(path)
-        if stat.st_mode & 0o7777 != 0o4750:
-            os.chmod(path, 0o4750)
+        if stat.st_mode & 0o7777 != 0o4644:
+            os.chmod(path, 0o4644)
 
         # write passwd
         with open(os.open('/etc/passwd.tmp', os.O_CREAT | os.O_WRONLY, 0o644), 'w') as f:
@@ -197,6 +210,10 @@ if __name__ == '__main__':
         logging.error('error occurred, please contact administrator.')
         raise
     finally:
+        if passed_lock_created:
+            os.unlink('/etc/passwd.lock')
+            os.unlink('/etc/shadow.lock')
+
         # write status to apache
         html_dir = '/var/www/html'
         path = os.path.join(html_dir, '.index.html.tmp')

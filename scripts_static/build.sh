@@ -17,6 +17,7 @@ sed "s@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g" 
 sed "/^HostKey/d" -i /etc/ssh/sshd_config
 echo "HostKey /etc/cgnas/ssh_host_keys/ssh_host_rsa_key" >>/etc/ssh/sshd_config
 echo "HostKey /etc/cgnas/ssh_host_keys/ssh_host_ecdsa_key" >>/etc/ssh/sshd_config
+echo "X11UseLocalhost no" >>/etc/ssh/sshd_config
 
 # setup samba
 # see https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
