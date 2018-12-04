@@ -30,3 +30,4 @@ services:
       - SYS_ADMIN
     devices:
       - /dev/net/tun
+    privileged: true

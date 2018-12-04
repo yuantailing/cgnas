@@ -4,6 +4,7 @@ import operator
 import os
 import requests
 import settings
+import shutil
 import subprocess
 import urllib.parse
 
@@ -135,8 +136,9 @@ if __name__ == '__main__':
         for user in users:
             uid = 10000 + user['staff_number']
             gid = user_gid
-            mnt_path = os.path.join('/nas/{:d}'.format(uid))
-            home_path = os.path.join('/home/{:s}'.format(user['username']))
+            mnt_path = os.path.join('/nas', '{:d}'.format(uid))
+            home_path = os.path.join('/home', '{:s}'.format(user['username']))
+            skel_path = os.path.join('/etc', 'skel')
 
             # prepare passwd
             passwd.append('{:s}:x:{:d}:{:d}::{:s}:{:s}\n'.format(user['username'], uid, gid, mnt_path, '/bin/bash'))
@@ -146,7 +148,11 @@ if __name__ == '__main__':
 
             # set home
             if not os.path.isdir(mnt_path):
+                filelist = os.listdir(skel_path)
                 os.makedirs(mnt_path)
+                for filename in filelist:
+                    shutil.copy(os.path.join(skel_path, filename), os.path.join(mnt_path, filename))
+                    os.chown(os.path.join(mnt_path, filename), uid, gid)
             stat = os.stat(mnt_path)
             if stat.st_uid != uid or stat.st_gid != gid:
                 os.chown(mnt_path, uid, gid)

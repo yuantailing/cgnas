@@ -54,5 +54,5 @@ lockd 31002/tcp
 lockd 31002/udp" >>/etc/services
 
 # setup openvpn
-curl -sSL https://server.thucg.com/static/serverlist/cscg.ovpn -o /etc/openvpn/cscg.conf
+curl -sSL https://cg.cs.tsinghua.edu.cn/serverlist/static/serverlist/cscg.ovpn -o /etc/openvpn/cscg.conf
 sed -i "s/auth-user-pass/auth-user-pass \/root\/private\/openvpn_account/g" /etc/openvpn/cscg.conf

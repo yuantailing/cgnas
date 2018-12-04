@@ -17,8 +17,12 @@ RUN pip3 install requests && \
 	rm -rf ~/.cache/pip
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake build-essential cron expect git gnupg2 htop iputils-ping less libboost-dev locate lsb-release man nano net-tools p7zip-full psmisc python python-pip rar screen smbclient sshfs telnet tmux unrar unzip vim wget zip zsh && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake bc blender build-essential cmake cron dc default-jdk default-jre expect fish git gnupg2 htop iputils-ping less libboost-dev libglu-dev libopencv-dev locate lsb-release man nano net-tools nodejs p7zip-full pkg-config psmisc python python-pip python-tk python3-tk rar screen smbclient sshfs telnet tmux unrar unzip vim wget whois x11-apps zip zsh && \
 	rm -rf /var/lib/apt/lists/*
+
+RUN pip install requests virtualenv && \
+	pip3 install virtualenv && \
+	rm -rf ~/.cache/pip
 
 COPY ssh_host_keys /etc/cgnas/ssh_host_keys
 COPY conf/openvpn_account /root/private/openvpn_account
