@@ -69,7 +69,7 @@ if __name__ == '__main__':
             r = requests.post(settings.CGNAS_API_URL, data={
                 'api_secret': settings.CGNAS_API_SECRET,
                 'latest_password_update': latest_password_update,
-            })
+            }, timeout=(5., 65.))
         except requests.exceptions.ConnectionError:
             logging.error('cgserver connection error')
             raise
@@ -150,6 +150,7 @@ if __name__ == '__main__':
             if not os.path.isdir(mnt_path):
                 filelist = os.listdir(skel_path)
                 os.makedirs(mnt_path)
+                os.chmod(mnt_path, 0o700)
                 for filename in filelist:
                     shutil.copy(os.path.join(skel_path, filename), os.path.join(mnt_path, filename))
                     os.chown(os.path.join(mnt_path, filename), uid, gid)
