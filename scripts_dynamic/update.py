@@ -132,17 +132,24 @@ if __name__ == '__main__':
             valid_users.append(user)
         users = valid_users
 
+        # check whether disks are properly mounted
+        for path in ['/nas/raid', '/nas/disk-0', '/nas/disk-1']:
+            if not os.path.isfile(os.path.join(path, '.cgnas')):
+                logging.error('Some disks are not properly mounted.')
+                raise
+
         # set home and prepare passwd (and group, shadow, smbpasswd)
         for user in users:
             uid = 10000 + user['staff_number']
             gid = user_gid
-            mnt_path = os.path.join('/nas', '{:d}'.format(uid))
+            mnt_path = os.path.join('/nas/raid', '{:d}'.format(uid))
             home_path = os.path.join('/home', '{:s}'.format(user['username']))
+            other_paths = [os.path.join('/nas/disk-0', '{:d}'.format(uid)), os.path.join('/nas/disk-1', '{:d}'.format(uid))]
             skel_path = os.path.join('/etc', 'skel')
 
             # prepare passwd
             passwd.append('{:s}:x:{:d}:{:d}::{:s}:{:s}\n'.format(user['username'], uid, gid, mnt_path, '/bin/bash'))
-            shadow.append('{:s}:{:s}:{:d}:0:90:7:::\n'.format(user['username'], user['shadow_password'], int(user['password_updated_at'] / 86400)))
+            shadow.append('{:s}:{:s}:{:d}:0:99999:7:::\n'.format(user['username'], user['shadow_password'], int(user['password_updated_at'] / 86400)))
             smbpasswd.append('{:s}:{:d}:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:{:s}:[U          ]:LCT-{:s}:\n'.format(
                 user['username'], uid, user['nt_password_hash'], hex(int(user['password_updated_at'])).lstrip('0x').upper()))
 
@@ -163,6 +170,15 @@ if __name__ == '__main__':
                     os.unlink(home_path)
             if not os.path.islink(home_path):
                 os.symlink(relpath, home_path)
+
+            # set access on other disks
+            for path in other_paths:
+                if not os.path.isdir(path):
+                    os.makedirs(path)
+                    os.chmod(path, 0o700)
+                stat = os.stat(path)
+                if stat.st_uid != uid or stat.st_gid != gid:
+                    os.chown(path, uid, gid)
 
         # clear other users
         for name in os.listdir('/home'):
@@ -214,7 +230,7 @@ if __name__ == '__main__':
 
         logging.info('Everything up-to-date.')
     except:
-        logging.error('error occurred, please contact administrator.')
+        logging.error('Error occurred, please contact administrator.')
         raise
     finally:
         if passed_lock_created:
@@ -233,6 +249,7 @@ if __name__ == '__main__':
             with open(log_filename) as log_f:
                 f.write(log_f.read())
             f.write('</pre><hr>')
+            f.write('<p><a href="."><button>refresh</button></a></p>')
             f.write('<p>Please go to <a href="{:s}">{:s}</a> to setup your account.</p>'.format(url, url))
             f.write('<p>&copy; <script>document.write((new Date()).getFullYear());</script> CSCG Group</p>')
             f.write('</body></html>')

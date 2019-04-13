@@ -11,7 +11,9 @@ services:
     hostname: nas-docker
     volumes:
       - ./scripts_dynamic:/root/scripts_dynamic:ro
-      - /mnt/nas/home:/nas
+      - /media/raid/home:/nas/raid
+      - /media/disk-0/home:/nas/disk-0
+      - /media/disk-1/home:/nas/disk-1
       - /mnt/nas/persistent:/mnt/persistent
     network_mode: host
     cap_add:
