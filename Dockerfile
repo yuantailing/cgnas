@@ -17,7 +17,7 @@ RUN pip3 install requests && \
 	rm -rf ~/.cache/pip
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake bc blender build-essential cmake cron dc default-jdk default-jre expect fish gfortran git gnupg2 golang-go htop iotop iputils-ping less libboost-dev libglu-dev liblapack-dev libopenblas-dev libopencv-dev locate lsb-release man nano net-tools nodejs p7zip-full php pkg-config psmisc python python-pip python-tk python3-tk rar screen smbclient sshfs telnet tmux unrar unzip vim wget whois x11-apps zip zsh && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake bc blender build-essential cmake cron dc default-jdk default-jre expect fish gfortran git gnupg2 golang-go htop iftop iotop iputils-ping less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libopenblas-dev libopencv-dev libsnappy-dev locate lsb-release man nano net-tools nodejs p7zip-full php pkg-config proxychains psmisc python-dev python-pip python-tk python3-dev python3-tk rar screen smbclient sshfs telnet tmux unrar unzip vim wget whois x11-apps zip zsh && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN pip install requests virtualenv && \

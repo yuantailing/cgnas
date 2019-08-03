@@ -8,7 +8,7 @@ touch /etc/cron.allow
 
 service ssh start
 service smbd start
-service vsftpd start || true
+#service vsftpd start || true
 service apache2 start
 service cron start
 service openvpn start
