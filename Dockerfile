@@ -25,7 +25,6 @@ RUN pip install requests virtualenv && \
 	rm -rf ~/.cache/pip
 
 COPY ssh_host_keys /etc/cgnas/ssh_host_keys
-COPY conf/openvpn_account /root/private/openvpn_account
 COPY scripts_static /root/scripts_static
 
 ARG VSFTPD_PASV_MIN_PORT

@@ -8,17 +8,10 @@ services:
         VSFTPD_PASV_MIN_PORT: ${VSFTPD_PASV_MIN_PORT}
         VSFTPD_PASV_MAX_PORT: ${VSFTPD_PASV_MAX_PORT}
     restart: always
-    hostname: nas-docker
+    hostname: cgservice-docker
     volumes:
       - ./scripts_dynamic:/root/scripts_dynamic:ro
-      - /media/raid/home:/nas/raid
-      - /media/disk-0/home:/nas/disk-0
-      - /media/disk-1/home:/nas/disk-1
-      - /media/raid/persistent:/mnt/persistent
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
-      - SYS_ADMIN
-    devices:
-      - /dev/net/tun
-    privileged: true
+      - /srv/raid/home:/nas/raid
+      - /srv/raid/persistent:/mnt/persistent
+    ports:
+      - "22:22"

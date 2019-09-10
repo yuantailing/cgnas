@@ -11,7 +11,6 @@ service smbd start
 #service vsftpd start || true
 service apache2 start
 service cron start
-service openvpn start
 
 updatedb &
 

@@ -133,7 +133,7 @@ if __name__ == '__main__':
         users = valid_users
 
         # check whether disks are properly mounted
-        for path in ['/nas/raid', '/nas/disk-0', '/nas/disk-1']:
+        for path in ['/nas/raid']:
             if not os.path.isfile(os.path.join(path, '.cgnas')):
                 logging.error('Some disks are not properly mounted.')
                 raise
@@ -144,7 +144,7 @@ if __name__ == '__main__':
             gid = user_gid
             mnt_path = os.path.join('/nas/raid', '{:d}'.format(uid))
             home_path = os.path.join('/home', '{:s}'.format(user['username']))
-            other_paths = [os.path.join('/nas/disk-0', '{:d}'.format(uid)), os.path.join('/nas/disk-1', '{:d}'.format(uid))]
+            other_paths = []
             skel_path = os.path.join('/etc', 'skel')
 
             # prepare passwd
