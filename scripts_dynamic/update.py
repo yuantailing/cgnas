@@ -157,7 +157,7 @@ if __name__ == '__main__':
             if not os.path.isdir(mnt_path):
                 filelist = os.listdir(skel_path)
                 os.makedirs(mnt_path)
-                os.chmod(mnt_path, 0o700)
+                os.chmod(mnt_path, 0o750)
                 for filename in filelist:
                     shutil.copy(os.path.join(skel_path, filename), os.path.join(mnt_path, filename))
                     os.chown(os.path.join(mnt_path, filename), uid, gid)
@@ -175,7 +175,7 @@ if __name__ == '__main__':
             for path in other_paths:
                 if not os.path.isdir(path):
                     os.makedirs(path)
-                    os.chmod(path, 0o700)
+                    os.chmod(path, 0o750)
                 stat = os.stat(path)
                 if stat.st_uid != uid or stat.st_gid != gid:
                     os.chown(path, uid, gid)
