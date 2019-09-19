@@ -13,14 +13,14 @@ RUN apt-get update && \
 	apt-get install --no-install-recommends -y apache2 curl nfs-kernel-server openssh-server openvpn python3 python3-pip samba vsftpd && \
 	rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install requests && \
+RUN pip3 install --user requests && \
 	rm -rf ~/.cache/pip
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y acl attr automake bc blender build-essential clang cmake codelite cron dc default-jdk default-jre expect fish gdb gfortran git gnupg2 golang-go htop iftop iotop iputils-ping less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libmysqlclient-dev libopenblas-dev libopencv-dev libsnappy-dev locate lsb-release man nano net-tools nodejs p7zip-full php pkg-config proxychains psmisc python-dev python-pip python-tk python3-dev python3-tk rar ruby-bundler screen smbclient sshfs telnet tmux unrar unzip vim wget whois x11-apps zip zsh && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y acl apport attr automake bc blender build-essential clang cmake codelite cron dc default-jdk default-jre expect fish gdb gfortran git gnupg1 gnupg2 golang-go htop iftop iotop iputils-ping less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libmysqlclient-dev libopenblas-dev libopencv-dev libsnappy-dev locate lsb-release man nano net-tools nodejs p7zip-full php pkg-config proxychains psmisc python-dev python-pip python-setuptools python-tk python3-dev python3-setuptools python3-tk rar ruby-bundler screen smbclient sshfs telnet tmux unrar unzip vim wget whois x11-apps zip zsh && \
 	rm -rf /var/lib/apt/lists/*
 
-RUN pip install requests virtualenv && \
+RUN pip install virtualenv && \
 	pip3 install virtualenv && \
 	rm -rf ~/.cache/pip
 
