@@ -9,6 +9,10 @@ RUN sed "s/read -p.*/REPLY=y/" -i $(which unminimize) && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-server ubuntu-desktop && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
 	apt-get install --no-install-recommends -y apache2 curl nfs-kernel-server openssh-server openvpn python3 python3-pip samba vsftpd && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -16,11 +20,33 @@ RUN pip3 install --user requests && \
 	rm -rf ~/.cache/pip
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y acl apport apt-rdepends attr automake bc blender build-essential clang cmake codelite cron dc default-jdk default-jre expect fish gdb gfortran git gnulib gnupg1 gnupg2 golang-go htop iftop iotop iputils-ping less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libmysqlclient-dev libopenblas-dev libpcre++-dev libopencv-dev libsnappy-dev locate lsb-release man nano net-tools nmap nodejs ntpdate p7zip-full php pkg-config procinfo proxychains psmisc python-dev python-pip python-setuptools python-tk python3-dev python3-setuptools python3-tk rar ruby-bundler screen smbclient sshfs telnet tmux traceroute unrar unzip vim wget whois x11-apps zip zsh && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y \
+		acl apport apt-rdepends apt-transport-https apt-utils aria2 attr automake \
+		bc blender build-essential \
+		clang cmake codelite cron \
+		dc default-jdk default-jre \
+		expect \
+		fish \
+		gdb gfortran git gnulib gnupg-agent gnupg1 gnupg2 golang-go \
+		htop \
+		iftop iotop iputils-ping \
+		landscape-client less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libmysqlclient-dev libopenblas-dev libpcre++-dev libopencv-dev libsnappy-dev locales locate lsb-release \
+		man \
+		nano net-tools nmap nodejs ntpdate \
+		p7zip-full php pkg-config procinfo proxychains psmisc python-dev python-pip python-setuptools python-tk python3-dev python3-setuptools python3-tk \
+		rar ruby-bundler \
+		screen shadowsocks-libev smbclient software-properties-common sshfs supervisor \
+		telnet tmux traceroute \
+		unrar unzip \
+		vim virtualenv \
+		wget whois \
+		x11-apps xdg-utils xorg xorg-dev \
+		zip zsh && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y aria2 g++-5 g++-6 g++-8 landscape-client python3.7 python3.7-dev shadowsocks-libev virtualenv xorg xorg-dev && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -y \
+		g++-5 g++-6 g++-8 python3.7 python3.7-dev && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN rm /etc/apt/apt.conf.d/docker-clean && \
