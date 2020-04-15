@@ -23,7 +23,7 @@ RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 		acl apport apt-rdepends apt-transport-https apt-utils aria2 attr automake \
 		bc blender build-essential \
-		chromium-browser chromium-chromedriver clang cmake codelite cron \
+		clang cmake codelite cron \
 		dc default-jdk default-jre dos2unix \
 		expect \
 		ffmpeg fish \
@@ -56,8 +56,6 @@ COPY ssh_host_keys /etc/cgnas/ssh_host_keys
 COPY conf/openvpn_account /root/private/openvpn_account
 COPY scripts_static /root/scripts_static
 
-ARG VSFTPD_PASV_MIN_PORT
-ARG VSFTPD_PASV_MAX_PORT
-RUN /root/scripts_static/build.sh
+RUN /root/scripts_static/build.sh "1804"
 
 CMD ["/root/scripts_static/cmd.sh"]

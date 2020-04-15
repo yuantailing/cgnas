@@ -1,6 +1,7 @@
 #!/bin/bash
-
 set -ex
+
+SSH_PORTS=$1
 
 # add `user' group
 groupadd -g501 user
@@ -10,11 +11,13 @@ ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && dpkg-reconfigure -f n
 
 # setup locale
 locale-gen en_US en_US.utf8 zh_CN zh_CN.utf8
+localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 update-locale LANG=en_US.utf8
 
 # setup openssh-server
 sed "s@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g" -i /etc/pam.d/sshd
 sed "/^HostKey/d" -i /etc/ssh/sshd_config
+for SSH_PORT in ${SSH_PORTS}; do echo "Port ${SSH_PORT}" >>/etc/ssh/sshd_config; done
 echo "HostKey /etc/cgnas/ssh_host_keys/ssh_host_rsa_key" >>/etc/ssh/sshd_config
 echo "HostKey /etc/cgnas/ssh_host_keys/ssh_host_ecdsa_key" >>/etc/ssh/sshd_config
 echo "X11UseLocalhost yes" >>/etc/ssh/sshd_config
@@ -43,9 +46,7 @@ chroot_local_user=YES
 local_root=/
 local_umask=022
 utf8_filesystem=YES
-use_localtime=NO
-pasv_min_port=${VSFTPD_PASV_MIN_PORT}
-pasv_max_port=${VSFTPD_PASV_MAX_PORT}" >>/etc/vsftpd.conf
+use_localtime=NO" >>/etc/vsftpd.conf
 
 # setup nfs
 mkdir -p /run/sendsigs.omit.d
@@ -60,4 +61,5 @@ curl -sSL https://cg.cs.tsinghua.edu.cn/serverlist/static/serverlist/cscg.ovpn -
 sed -i "s/auth-user-pass/auth-user-pass \/root\/private\/openvpn_account/g" /etc/openvpn/cscg.conf
 
 # disable updatedb
-chmod -x /etc/cron.daily/mlocate
+chmod -x /etc/cron.daily/locate
+if [ -f /etc/cron.daily/mlocate ]; then chmod -x /etc/cron.daily/mlocate; fi
