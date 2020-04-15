@@ -23,23 +23,23 @@ RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 		acl apport apt-rdepends apt-transport-https apt-utils aria2 attr automake \
 		bc blender build-essential \
-		clang cmake codelite cron \
-		dc default-jdk default-jre \
+		chromium-browser chromium-chromedriver clang cmake codelite cron \
+		dc default-jdk default-jre dos2unix \
 		expect \
-		fish \
+		ffmpeg fish \
 		gdb gfortran git gnulib gnupg-agent gnupg1 gnupg2 golang-go \
 		htop \
-		iftop iotop iputils-ping \
-		landscape-client less libboost-dev libfreetype6-dev libglu-dev liblapack-dev libmysqlclient-dev libopenblas-dev libpcre++-dev libopencv-dev libsnappy-dev locales locate lsb-release \
-		man \
+		iftop imagemagick iotop iputils-ping \
+		landscape-client less libboost-dev libfreetype6-dev libglu-dev liblapack-dev liblapacke-dev libmysqlclient-dev libopenblas-dev libpcre++-dev libopencv-dev libsnappy-dev libssl-dev links lm-sensors locales locate lsb-release \
+		man mysql-client \
 		nano net-tools nmap nodejs ntpdate \
 		p7zip-full php pkg-config procinfo proxychains psmisc python-dev python-pip python-setuptools python-tk python3-dev python3-setuptools python3-tk \
-		rar ruby-bundler \
+		rar ruby-bundler ruby-dev \
 		screen shadowsocks-libev smbclient software-properties-common sshfs supervisor \
 		telnet tmux traceroute \
 		unrar unzip \
 		vim virtualenv \
-		wget whois \
+		w3m wget whois \
 		x11-apps xdg-utils xorg xorg-dev \
 		zip zsh && \
 	rm -rf /var/lib/apt/lists/*

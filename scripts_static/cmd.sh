@@ -13,6 +13,4 @@ service apache2 start
 service cron start
 service openvpn start
 
-updatedb &
-
 python3 $(dirname $(realpath "$0"))/idle.py
