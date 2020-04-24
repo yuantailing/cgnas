@@ -25,8 +25,8 @@ echo "GatewayPorts clientspecified" >>/etc/ssh/sshd_config
 
 # setup samba
 # see https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
-sed "s/passdb backend = tdbsam/passdb backend = smbpasswd/g" -i /etc/samba/smb.conf
-sed "/\[global\]/a\  unix extensions = no" -i /etc/samba/smb.conf
+sed "/\[global\]/a\  unix extensions = no\n  passdb backend = smbpasswd" -i /etc/samba/smb.conf
+sed "/passdb backend = tdbsam/d" -i /etc/samba/smb.conf
 echo "[share]
   path = /
   browseable = yes

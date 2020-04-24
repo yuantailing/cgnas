@@ -1,20 +1,7 @@
 version: '3'
 
 services:
-  cgnas1804:
-    build:
-      context: .
-      dockerfile: Dockerfile.1804
-    restart: always
-    hostname: nas-docker-1804
-    volumes:
-      - ./scripts_dynamic:/root/scripts_dynamic:ro
-      - /media/raid/home:/nas/raid
-      - /media/disk-0/home:/nas/disk-0
-      - /media/disk-1/home:/nas/disk-1
-    network_mode: host
-
-  cgnas2004:
+  cgnas:
     build:
       context: .
       dockerfile: Dockerfile.2004
@@ -32,3 +19,16 @@ services:
       - SYS_ADMIN
     devices:
       - /dev/net/tun
+
+  cgnas1804:
+    build:
+      context: .
+      dockerfile: Dockerfile.1804
+    restart: always
+    hostname: nas-docker-1804
+    volumes:
+      - ./scripts_dynamic:/root/scripts_dynamic:ro
+      - /media/raid/home:/nas/raid
+      - /media/disk-0/home:/nas/disk-0
+      - /media/disk-1/home:/nas/disk-1
+    network_mode: host
