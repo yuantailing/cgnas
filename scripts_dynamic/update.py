@@ -54,7 +54,7 @@ if __name__ == '__main__':
         handlers=handlers,
     )
 
-    passed_lock_created = False
+    passwd_lock_created = False
     try:
         # communicate with API
         latest_password_update_filename = os.path.join(var_dir, 'latest_password_update')
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             f.write('{:d}'.format(os.getpid()))
         with open('/etc/shadow.lock', 'x') as f:
             f.write('{:d}'.format(os.getpid()))
-        passed_lock_created = True
+        passwd_lock_created = True
         protected_users = set()
         forbidden_names = set()
         with open('/etc/passwd') as f:
@@ -105,8 +105,6 @@ if __name__ == '__main__':
         for line in passwd:
             protected_users.add(passwd_name(line))
             forbidden_names.add(passwd_name(line))
-        for line in group:
-            forbidden_names.add(group_name(line))
         shadow = [line for line in shadow if shadow_name(line) in protected_users]
         smbpasswd = []
         user_gid = group_gid([g for g in group if group_name(g) == 'user'][0])
@@ -233,7 +231,7 @@ if __name__ == '__main__':
         logging.error('Error occurred, please contact administrator.')
         raise
     finally:
-        if passed_lock_created:
+        if passwd_lock_created:
             os.unlink('/etc/passwd.lock')
             os.unlink('/etc/shadow.lock')
 
