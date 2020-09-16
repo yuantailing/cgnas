@@ -32,7 +32,7 @@ RUN apt-get update && \
 		iftop imagemagick iotop iputils-ping \
 		landscape-client less libboost-dev libfreetype6-dev libglu-dev liblapack-dev liblapacke-dev libmysqlclient-dev libopenblas-dev libpcre++-dev libopencv-dev libsnappy-dev libssl-dev links lm-sensors locales locate lsb-release \
 		man mysql-client \
-		nano net-tools nmap nodejs ntpdate \
+		nano net-tools netcat nmap nodejs ntpdate \
 		p7zip-full php php-dev pkg-config procinfo proxychains psmisc python-dev python-pip python-setuptools python-tk python3-dev python3-setuptools python3-tk \
 		rar ruby-bundler ruby-dev \
 		screen shadowsocks-libev smbclient software-properties-common sshfs supervisor \
